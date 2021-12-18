@@ -20,6 +20,44 @@ async function run() {
     await client.connect();
     const database = client.db("sunglass_shop");
     const productCollection = database.collection("products");
+    const orderCollection = database.collection("orders");
+    const usersCollection = database.collection("users");
+    const reviewCollection = database.collection("reviews");
+
+    //add api
+    app.post("/products", async (req, res) => {
+      const product = req.body;
+      const result = await productCollection.insertOne(product);
+      res.json(result);
+    });
+
+    //add order
+    app.post("/orders", async (req, res) => {
+      const order = req.body;
+      const result = await orderCollection.insertOne(order);
+      res.json(result);
+    });
+    //add review
+    app.post("/reviews", async (req, res) => {
+      const review = req.body;
+      const result = await reviewCollection.insertOne(review);
+      res.json(result);
+    });
+
+    // get reviews
+    app.get("/reviews", async (req, res) => {
+      const cursor = reviewCollection.find({});
+      const allReviews = await cursor.toArray();
+      res.json(allReviews);
+    });
+
+    //add user info
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const result = await usersCollection.insertOne(user);
+
+      res.json(result);
+    });
   } finally {
     //  await client.close()
   }
